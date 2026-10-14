@@ -1,0 +1,45 @@
+/* Mimics Thunderbird's in-content (about:addons / settings) look using system colors. */
+:root {
+  color-scheme: light dark;
+  --card-bg: light-dark(#fff, #2b2a33);
+  --card-border: light-dark(rgba(0,0,0,.15), rgba(255,255,255,.15));
+  --field-bg: light-dark(#fff, #1c1b22);
+  --field-border: light-dark(#8f8f9d, #8f8f9d);
+  --hint: light-dark(#5b5b66, #bfbfc9);
+  --page-bg: light-dark(#f9f9fb, #1c1b22);
+  --focus: AccentColor;
+}
+html { background: var(--page-bg); }
+body {
+  margin: 0;
+  color: CanvasText;
+  font: message-box;
+  font-size: 15px;
+  line-height: 1.4;
+}
+main { max-width: 664px; margin: 0 auto; padding: 32px 24px; }
+h1 { font-size: 1.6em; font-weight: 600; margin: 0 0 8px; }
+.intro, .hint { color: var(--hint); margin: 0 0 20px; }
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+label { display: block; font-weight: 600; margin-bottom: 8px; }
+.row { display: flex; align-items: center; gap: 10px; }
+input[type="number"] {
+  width: 7em;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  font: inherit;
+  color: inherit;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: 4px;
+}
+input[type="number"]:hover { border-color: CanvasText; }
+input[type="number"]:focus-visible { outline: 2px solid var(--focus); outline-offset: 1px; border-color: transparent; }
+.hint { margin: 10px 0 0; font-size: .9em; }
+.saved { color: var(--hint); font-size: .9em; transition: opacity .3s; }

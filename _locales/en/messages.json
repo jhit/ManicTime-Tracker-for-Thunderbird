@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Thunderbird Tracker for ManicTime"
+  },
+  "extensionDescription": {
+    "message": "Sends From, To and Subject of the active message or compose window to the local ManicTime client."
+  },
+  "optionsTitle": {
+    "message": "Thunderbird Tracker for ManicTime"
+  },
+  "optionsIntro": {
+    "message": "Controls what is sent to ManicTime for the mail in the active Thunderbird window."
+  },
+  "maxSubjectLabel": {
+    "message": "Maximum subject length"
+  },
+  "maxSubjectHint": {
+    "message": "Number of characters. Longer subjects are cut off and end with “…”. 0 means no limit."
+  },
+  "charactersUnit": {
+    "message": "characters"
+  },
+  "savedNote": {
+    "message": "Saved"
+  }
+}

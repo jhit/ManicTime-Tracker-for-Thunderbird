@@ -1,0 +1,26 @@
+{
+  "extensionName": {
+    "message": "Thunderbird Tracker für ManicTime"
+  },
+  "extensionDescription": {
+    "message": "Sendet Absender, Empfänger und Betreff der aktiven Nachricht bzw. des Verfassen-Fensters an den lokalen ManicTime-Client."
+  },
+  "optionsTitle": {
+    "message": "Thunderbird Tracker für ManicTime"
+  },
+  "optionsIntro": {
+    "message": "Legt fest, was für die Nachricht im aktiven Thunderbird-Fenster an ManicTime gesendet wird."
+  },
+  "maxSubjectLabel": {
+    "message": "Maximale Länge des Betreffs"
+  },
+  "maxSubjectHint": {
+    "message": "Anzahl Zeichen. Längere Betreffs werden abgeschnitten und enden mit „…“. 0 bedeutet keine Begrenzung."
+  },
+  "charactersUnit": {
+    "message": "Zeichen"
+  },
+  "savedNote": {
+    "message": "Gespeichert"
+  }
+}
