@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.13
+- The URL now starts with the account name instead of "thunderbird": `https://<account>/<folder>/`. Characters not allowed in a host name (spaces, `@`, …) in the account name are replaced by `-`.
+
+## 1.12
+- Search (virtual), unified and tag folders are used in the URL when the mail is viewed in one: `https://thunderbird/<account>/virtual|unified|tag/<name>/`. Otherwise the real folder is used.
+
+## 1.11
+- The mail folder is part of the URL when reading: `https://thunderbird/<account>/<folder>/` (e.g. `…/myAccount/INBOX/`). Composing uses `https://thunderbird/<account>/compose/`.
+
+## 1.10
+- The mail account name is part of the URL sent to ManicTime: `https://thunderbird/<account>/read|compose`. Needs the `accountsRead` permission again.
+
 ## 1.9
 - Added the ManicTime icon.
 

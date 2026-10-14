@@ -64,7 +64,12 @@ function toMessages(info) {
     ? `From: ${info.from}, To: ${info.to}, Subject: ${shorten(info.subject)}`
     : null;
   // ManicTime treats the document like a web page: host = group name.
-  const url = active ? `https://thunderbird/${info.mode === "compose" ? "compose" : "read"}` : null;
+  // https://<account>/<folder path>/ when reading, https://<account>/compose/ when composing.
+  // The account name becomes the host, so it is reduced to valid host characters.
+  const host = (info.account || "").replace(/[^\p{L}\p{N}.-]+/gu, "-").replace(/^[-.]+|[-.]+$/g, "") || "unknown";
+  const seg = (v) => encodeURIComponent(v);
+  const folder = info.mode === "compose" ? "compose" : (info.folder || "").split("/").filter(Boolean).map(seg).join("/");
+  const url = active ? `https://${host}/${folder || "unknown"}/` : null;
   return PROCESS_NAMES.map((p) =>
     JSON.stringify({ ProcessName: p, Title: title, Url: url, IsPrivate: active ? false : null })
   );
@@ -72,6 +77,37 @@ function toMessages(info) {
 
 function addrList(list) {
   return (list || []).join("; ");
+}
+
+const accountNames = new Map(); // accountId -> name (cleared when accounts change)
+messenger.accounts.onCreated?.addListener(() => accountNames.clear());
+messenger.accounts.onUpdated?.addListener(() => accountNames.clear());
+messenger.accounts.onDeleted?.addListener(() => accountNames.clear());
+
+async function accountName(accountId) {
+  if (!accountId) return "";
+  if (!accountNames.has(accountId)) {
+    try {
+      const a = await messenger.accounts.get(accountId);
+      accountNames.set(accountId, (a && a.name) || "");
+    } catch (e) {
+      return "";
+    }
+  }
+  return accountNames.get(accountId);
+}
+
+// Folder shown in the 3-pane tab if it is a search (virtual), unified or tag
+// folder: "virtual/<name>", "unified/<name>" or "tag/<name>". Otherwise "".
+async function specialFolder(tabId) {
+  try {
+    const f = (await messenger.mailTabs.get(tabId)).displayedFolder;
+    if (!f) return "";
+    const kind = f.isVirtual ? "virtual" : f.isUnified ? "unified" : f.isTag ? "tag" : "";
+    return kind ? kind + "/" + (f.name || "") : "";
+  } catch (e) {
+    return ""; // not a mail tab (message tab/window)
+  }
 }
 
 async function currentInfo() {
@@ -84,6 +120,9 @@ async function currentInfo() {
     const d = await messenger.compose.getComposeDetails(tab.id);
     return {
       mode: "compose",
+      account: await accountName(
+        d.identityId ? (await messenger.identities.get(d.identityId))?.accountId : null
+      ),
       from: d.from || "",
       to: addrList((d.to || []).map((r) => (typeof r === "string" ? r : r.id || ""))),
       subject: d.subject || "",
@@ -98,6 +137,8 @@ async function currentInfo() {
   if (!msg) return { mode: "none" };
   return {
     mode: "read",
+    account: await accountName(msg.folder && msg.folder.accountId),
+    folder: await specialFolder(tab.id) || (msg.folder && msg.folder.path) || "",
     from: msg.author || "",
     to: addrList(msg.recipients),
     subject: msg.subject || "",
