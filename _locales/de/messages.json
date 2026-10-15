@@ -1,12 +1,12 @@
 {
   "extensionName": {
-    "message": "Thunderbird Tracker für ManicTime"
+    "message": "ManicTime-Tracker für Thunderbird"
   },
   "extensionDescription": {
     "message": "Sendet Absender, Empfänger und Betreff der aktiven Nachricht bzw. des Verfassen-Fensters an den lokalen ManicTime-Client."
   },
   "optionsTitle": {
-    "message": "Thunderbird Tracker für ManicTime"
+    "message": "ManicTime-Tracker für Thunderbird"
   },
   "optionsIntro": {
     "message": "Legt fest, was für die Nachricht im aktiven Thunderbird-Fenster an ManicTime gesendet wird."

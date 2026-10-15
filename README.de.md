@@ -1,4 +1,4 @@
-# Thunderbird Tracker für ManicTime
+# ManicTime-Tracker für Thunderbird
 
 [English](README.md)
 

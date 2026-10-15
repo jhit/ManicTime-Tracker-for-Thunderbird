@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.14
+- Renamed to "ManicTime Tracker for Thunderbird" (German: "ManicTime-Tracker für Thunderbird") to comply with the Mozilla trademark policy.
+
 ## 1.13
 - The URL now starts with the account name instead of "thunderbird": `https://<account>/<folder>/`. Characters not allowed in a host name (spaces, `@`, …) in the account name are replaced by `-`.
 

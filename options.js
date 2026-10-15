@@ -1,4 +1,4 @@
-// Thunderbird Tracker for ManicTime - Copyright (C) 2026 Jürgen Hörmann
+// ManicTime Tracker for Thunderbird - Copyright (C) 2026 Jürgen Hörmann
 // SPDX-License-Identifier: GPL-3.0-or-later
 for (const el of document.querySelectorAll("[data-i18n]")) {
   el.textContent = messenger.i18n.getMessage(el.dataset.i18n);

@@ -1,4 +1,4 @@
-// Thunderbird Tracker for ManicTime - Copyright (C) 2026 Jürgen Hörmann
+// ManicTime Tracker for Thunderbird - Copyright (C) 2026 Jürgen Hörmann
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Polls the focused Thunderbird window and sends From/To/Subject to the local
 // ManicTime client via its document-tracker WebSocket (the same one the
