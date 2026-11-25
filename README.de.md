@@ -5,7 +5,7 @@
 Meldet **Absender / Empfänger / Betreff** des aktiven Thunderbird-Fensters (Mail lesen oder verfassen) an den lokalen **ManicTime**-Client, sodass sie auf der Dokumente-Zeitleiste erscheinen. Optional kann der Betreff in den Add-on-Einstellungen auf eine maximale Zeichenzahl gekürzt werden. Oberfläche auf Deutsch und Englisch.
 
 ## Funktionsweise
-Das Add-on nutzt denselben Kanal wie die Chrome-/Firefox-Erweiterungen von ManicTime: WebSocket `ws://127.0.0.1:42870/manictime-document/` (Ports 42870–42879), Nachricht `{ProcessName, Title, Url, IsPrivate}`. Der `Title` lautet `From: …, To: …, Subject: …`; die `Url` lautet `https://<Konto>/<Ordner>/` beim Lesen (z. B. `…/myAccount/INBOX/`) (bzw. `…/<Konto>/virtual|unified|tag/<Name>/` bei Suchordnern, vereinigten Ordnern und Schlagwort-Ordnern) bzw. `https://<Konto>/compose/` beim Verfassen (Konto = Name des Thunderbird-Mailkontos).
+Das Add-on nutzt denselben Kanal wie die Chrome-/Firefox-Erweiterungen von ManicTime: WebSocket `ws://127.0.0.1:42870/manictime-document/` (Ports 42870–42879), Nachricht `{ProcessName, Title, DocumentType, DocumentName, DocumentGroup}` mit `DocumentType` = `ManicTime/Email`. Der `Title` ist der Betreff; `DocumentName` lautet `From: <Absender>, To: <Empfänger>`; `DocumentGroup` ist `<Konto>/<Ordner>` (`<Konto>/compose` beim Verfassen).
 
 ## Datenschutz
 Mail-Daten werden nur an `127.0.0.1` gesendet (ManicTime auf dem eigenen Rechner). Das Add-on hat darüber hinaus keinen Netzwerkzugriff und speichert nur die Einstellung für die Betreff-Länge. Es wird nichts an den Entwickler oder Dritte übertragen.

@@ -5,7 +5,7 @@
 Reports **From / To / Subject** of the focused Thunderbird window (reading or composing a mail) to the local **ManicTime** client, so it shows up on the Documents timeline. Optional: shorten the subject to a maximum number of characters (add-on settings). English and German UI.
 
 ## How it works
-Same channel as ManicTime's own Chrome/Firefox extensions: WebSocket `ws://127.0.0.1:42870/manictime-document/` (ports 42870–42879), message `{ProcessName, Title, Url, IsPrivate}`. The `Title` is `From: …, To: …, Subject: …`; the `Url` is `https://<account>/<folder>/` when reading (e.g. `…/myAccount/INBOX/`) (or `…/<account>/virtual|unified|tag/<name>/` for search, unified and tag folders) or `https://<account>/compose/` when composing (account = name of the Thunderbird mail account).
+Same channel as ManicTime's own Chrome/Firefox extensions: WebSocket `ws://127.0.0.1:42870/manictime-document/` (ports 42870–42879), message `{ProcessName, Title, DocumentType, DocumentName, DocumentGroup}` with `DocumentType` = `ManicTime/Email`. The `Title` is the subject; `DocumentName` is `From: <sender>, To: <receiver>`; `DocumentGroup` is `<account>/<folder>` (`<account>/compose` when composing).
 
 ## Privacy
 Mail data is sent only to `127.0.0.1` (ManicTime on your own machine). The add-on has no network access beyond that and stores only the subject-length setting. Nothing is sent to the developer or any third party.

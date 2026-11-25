@@ -1,7 +1,7 @@
 // ManicTime Tracker for Thunderbird - Copyright (C) 2026 Jürgen Hörmann
 // SPDX-License-Identifier: GPL-3.0-or-later
-// Polls the focused Thunderbird window and sends From/To/Subject to the local
-// ManicTime client via its document-tracker WebSocket (the same one the
+// Polls the focused Thunderbird window and sends From/To/Subject as a
+// "ManicTime/Email" document to the local ManicTime client via its document-tracker WebSocket (the same one the
 // ManicTime Chrome/Firefox extension uses).
 const FIRST_PORT = 42870;
 const PORT_COUNT = 10;
@@ -60,19 +60,19 @@ function shorten(subject) {
 
 function toMessages(info) {
   const active = info.mode === "read" || info.mode === "compose";
-  const title = active
-    ? `From: ${info.from}, To: ${info.to}, Subject: ${shorten(info.subject)}`
-    : null;
-  // ManicTime treats the document like a web page: host = group name.
-  // https://<account>/<folder path>/ when reading, https://<account>/compose/ when composing.
-  // The account name becomes the host, so it is reduced to valid host characters.
-  const host = (info.account || "").replace(/[^\p{L}\p{N}.-]+/gu, "-").replace(/^[-.]+|[-.]+$/g, "") || "unknown";
-  const seg = (v) => encodeURIComponent(v);
-  const folder = info.mode === "compose" ? "compose" : (info.folder || "").split("/").filter(Boolean).map(seg).join("/");
-  const url = active ? `https://${host}/${folder || "unknown"}/` : null;
-  return PROCESS_NAMES.map((p) =>
-    JSON.stringify({ ProcessName: p, Title: title, Url: url, IsPrivate: active ? false : null })
-  );
+  let msg = { Title: null, DocumentType: null, DocumentName: null, DocumentGroup: null };
+  if (active) {
+    const subject = shorten(info.subject);
+    const name = `From: ${info.from}, To: ${info.to}`;
+    const folder = info.mode === "compose" ? "compose" : info.folder || "unknown";
+    msg = {
+      Title: subject,
+      DocumentType: "ManicTime/Email",
+      DocumentName: name,
+      DocumentGroup: `${info.account || "unknown"}/${folder}`,
+    };
+  }
+  return PROCESS_NAMES.map((p) => JSON.stringify({ ProcessName: p, ...msg }));
 }
 
 function addrList(list) {
@@ -138,7 +138,7 @@ async function currentInfo() {
   return {
     mode: "read",
     account: await accountName(msg.folder && msg.folder.accountId),
-    folder: await specialFolder(tab.id) || (msg.folder && msg.folder.path) || "",
+    folder: (await specialFolder(tab.id)) || (msg.folder && msg.folder.path) || "",
     from: msg.author || "",
     to: addrList(msg.recipients),
     subject: msg.subject || "",

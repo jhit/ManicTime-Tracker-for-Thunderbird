@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.15
+- Tracking now uses the ManicTime document type `ManicTime/Email` (as the ManicTime Outlook plugin does) instead of a fake URL: the Documents timeline shows `From: <sender>, To: <receiver>`, grouped as `<account>/<folder>` (`<account>/compose` when composing; search, unified and tag folders as `virtual|unified|tag/<name>`). The subject is the window title on the Applications timeline.
+
 ## 1.14
 - Renamed to "ManicTime Tracker for Thunderbird" (German: "ManicTime-Tracker für Thunderbird") to comply with the Mozilla trademark policy.
 
