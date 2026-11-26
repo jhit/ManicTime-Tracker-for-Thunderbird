@@ -23,7 +23,7 @@ Requirements: Thunderbird 115 or newer with the add-on installed. To load it uns
    python3 manictime-mock.py
    ```
    It listens on `ws://127.0.0.1:42870/manictime-document/`.
-2. Start Thunderbird with the add-on. The add-on connects within 10 seconds, and the server prints `# connected 127.0.0.1`.
+2. Start Thunderbird with the add-on. The add-on connects right away, and the server prints `# connected 127.0.0.1`. If Thunderbird was started first, the add-on finds the server at its next retry, within a minute.
 3. Select or compose a mail. The terminal prints one line per process name (`thunderbird` and `thunderbird-bin`). It prints them whenever the mail changes, and again every 5 seconds:
    ```
    {"ProcessName": "thunderbird", "Title": "<subject>", "DocumentType": "ManicTime/Email", "DocumentName": "From: <sender>, To: <receiver>", "DocumentGroup": "<account>/INBOX"}
@@ -33,5 +33,18 @@ Requirements: Thunderbird 115 or newer with the add-on installed. To load it uns
 
 ### Options
 
-- `--port <n>`: listen on another port. Use this if ManicTime is already running and holds port 42870. Pick a port from 42871–42879: the add-on tries those ports when it starts and then every 60 seconds, so the connection can take up to a minute.
+- `--port <n>`: listen on another port from 42870–42879. The add-on tries the ports in this order and stays connected to the first one that answers. If ManicTime is running, the add-on is connected to ManicTime and does not look for the mock server: quit ManicTime, and the add-on connects to the mock server right away.
 - `--redact`: print only the length of the subject, addresses and folder, not their text. Use it when the output is shared, for example in logs or bug reports.
+
+## Watching the connection in the developer tools
+
+The add-on opens one WebSocket connection when Thunderbird starts and keeps it open. It looks for a port again only when that connection closes. The network monitor records only connections made while it is open. If you open it later, it shows nothing, even though messages are being sent over the existing connection.
+
+To see the connection and its messages:
+
+1. Open *Tools → Developer Tools → Debug Add-ons*, click *Inspect* next to ManicTime Tracker for Thunderbird and open the *Network* tab.
+2. Quit and restart ManicTime (option A) or the mock server (option B). The add-on notices the closed connection and connects again right away.
+3. The list shows one request to `ws://127.0.0.1:42870/manictime-document/` (or the port in use) with status `101`.
+4. Click it and open the *Response* or *Messages* tab. It lists every message sent: whenever the mail changes, and every 5 seconds.
+
+If nothing shows up even then, check that the expected build of the add-on is active. Builds with the same version number look the same under Add-ons and Themes. Remove the add-on and install the `.xpi` again, or load `src/manifest.json` as a temporary add-on.

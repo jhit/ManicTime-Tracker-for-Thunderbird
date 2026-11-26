@@ -7,9 +7,9 @@ add-on without ManicTime. Python 3 standard library only.
     python3 test/manictime-mock.py [--port 42870] [--redact]
 
 Listens on ws://127.0.0.1:<port>/manictime-document/ and prints every message
-the add-on sends, one JSON object per line. The add-on connects to port 42870
-at start and retries it every 10 s; ports 42871-42879 are retried every 60 s
-(use one of them if ManicTime itself already occupies 42870).
+the add-on sends, one JSON object per line. The add-on tries ports 42870-42879
+in order and stays with the first that answers, so quit ManicTime first if it
+is running; the add-on then rescans and finds this server.
 --redact replaces mail data (subject, addresses, folder) by its length.
 """
 import argparse

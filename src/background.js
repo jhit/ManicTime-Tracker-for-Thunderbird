@@ -8,38 +8,75 @@ const PORT_COUNT = 10;
 const PROCESS_NAMES = ["thunderbird", "thunderbird-bin"]; // as seen by ManicTime
 const POLL_MS = 2000;
 const HEARTBEAT_MS = 5000;
+const CONNECT_TIMEOUT_MS = 3000;
+const RETRY_MIN_MS = 10000; // wait after a scan that found nothing, doubled ...
+const RETRY_MAX_MS = 60000; // ... after each failed scan up to this limit
 
-const sockets = new Map(); // port -> WebSocket (open or connecting)
+let socket = null; // the open connection to ManicTime, or null
+let scanning = false;
+let retryMs = RETRY_MIN_MS;
+let retryTimer = null;
 let lastMessages = null;
 let lastKey = null;
 let lastSent = 0;
 
-function connect(onlyFirst) {
-  const last = onlyFirst ? FIRST_PORT + 1 : FIRST_PORT + PORT_COUNT;
-  for (let port = FIRST_PORT; port < last; port++) {
-    if (sockets.has(port)) continue;
+// Resolves with the WebSocket once it is open, or with null if it fails.
+function tryPort(port) {
+  return new Promise((resolve) => {
     let ws;
     try {
       ws = new WebSocket("ws://127.0.0.1:" + port + "/manictime-document/");
     } catch (e) {
-      continue;
+      resolve(null);
+      return;
     }
-    sockets.set(port, ws);
+    const timer = setTimeout(() => {
+      ws.close();
+      resolve(null);
+    }, CONNECT_TIMEOUT_MS);
     ws.onopen = () => {
-      if (lastMessages) lastMessages.forEach((m) => ws.send(m));
+      clearTimeout(timer);
+      resolve(ws);
     };
-    ws.onclose = ws.onerror = () => sockets.delete(port);
-  }
+    ws.onerror = ws.onclose = () => {
+      clearTimeout(timer);
+      resolve(null);
+    };
+  });
 }
 
-function broadcast(messages) {
-  lastMessages = messages;
-  for (const ws of sockets.values()) {
-    if (ws.readyState !== WebSocket.OPEN) continue;
-    try {
-      messages.forEach((m) => ws.send(m));
-    } catch (e) {}
+// Tries the ports in order and keeps the first connection that opens. Scans
+// again only when that connection closes; if no port answers, retries later.
+async function scan() {
+  if (scanning || socket) return;
+  scanning = true;
+  clearTimeout(retryTimer);
+  for (let port = FIRST_PORT; port < FIRST_PORT + PORT_COUNT; port++) {
+    const ws = await tryPort(port);
+    if (!ws) continue;
+    socket = ws;
+    scanning = false;
+    retryMs = RETRY_MIN_MS;
+    ws.onerror = null;
+    ws.onclose = () => {
+      if (socket !== ws) return;
+      socket = null;
+      scan();
+    };
+    if (lastMessages) send(lastMessages);
+    return;
   }
+  scanning = false;
+  retryTimer = setTimeout(scan, retryMs);
+  retryMs = Math.min(retryMs * 2, RETRY_MAX_MS);
+}
+
+function send(messages) {
+  lastMessages = messages;
+  if (!socket || socket.readyState !== WebSocket.OPEN) return;
+  try {
+    messages.forEach((m) => socket.send(m));
+  } catch (e) {}
 }
 
 let maxSubject = 0; // 0 = do not shorten
@@ -157,13 +194,11 @@ async function tick() {
   if (key !== lastKey || now - lastSent >= HEARTBEAT_MS) {
     lastKey = key;
     lastSent = now;
-    broadcast(toMessages(info));
+    send(toMessages(info));
   }
 }
 
 loadOptions();
-connect();
-setInterval(() => connect(true), 10000); // main port
-setInterval(() => connect(false), 60000); // fallback ports
+scan();
 setInterval(tick, POLL_MS);
 tick();

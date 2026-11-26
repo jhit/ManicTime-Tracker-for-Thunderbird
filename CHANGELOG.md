@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.17
+- Port scan only when needed: the add-on connects to the first port of 42870–42879 that answers and stops scanning. It scans again when that connection closes; while ManicTime is not running, it retries after 10 s, then less often, up to every 60 s. Before, it kept trying all other ports every 60 s and sent to every port that answered.
+- `test/TESTING.md`: how to watch the connection and its messages in the Thunderbird developer tools.
+
 ## 1.16
 - The options page now states which data is sent (sender, recipients, subject, account and folder) and that it goes only to the ManicTime client on this computer.
 - Icons in the sizes declared in the manifest (48 and 96 px).

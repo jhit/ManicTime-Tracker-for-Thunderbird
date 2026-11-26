@@ -13,7 +13,7 @@ A Thunderbird MailExtension (Manifest V2, Thunderbird ≥ 115) that reports the 
 - Lint (optional, `WEBEXT-LINTER-CACHE/` is gitignored): `npx web-ext lint --source-dir src`
 - Manual test: Thunderbird → Debug Add-ons → Load Temporary Add-on → select `src/manifest.json`.
 - Test steps (for users and AMO reviewers) are in `test/TESTING.md`; keep them in sync with behavior changes.
-- Test without ManicTime: `python3 test/manictime-mock.py [--port 4287x] [--redact]` (stdlib only) imitates ManicTime's socket and prints every message the add-on sends. If ManicTime already holds 42870, use 42871–42879; the add-on retries those only every 60 s. Use `--redact` whenever the output ends up in a conversation or log — the messages contain real subjects and addresses.
+- Test without ManicTime: `python3 test/manictime-mock.py [--port 4287x] [--redact]` (stdlib only) imitates ManicTime's socket and prints every message the add-on sends. The add-on keeps the first port that answers, so it only finds the mock while ManicTime is not running (quitting ManicTime triggers an immediate rescan). Use `--redact` whenever the output ends up in a conversation or log — the messages contain real subjects and addresses.
 
 ## Architecture
 
@@ -21,7 +21,7 @@ A Thunderbird MailExtension (Manifest V2, Thunderbird ≥ 115) that reports the 
 - **Polling, not events:** every `POLL_MS` (2 s) `currentInfo()` inspects the last-focused window — compose window via `compose.getComposeDetails`, otherwise `messageDisplay.getDisplayedMessage` for 3-pane/message tabs. A message is sent when the info changes or every `HEARTBEAT_MS` (5 s).
 - **Protocol:** JSON `{ProcessName, Title, DocumentType: "ManicTime/Email", DocumentName, DocumentGroup}` (same format as ManicTime's Outlook plugin) sent over WebSocket to `ws://127.0.0.1:42870–42879/manictime-document/`. One message per entry in `PROCESS_NAMES`, because the process name ManicTime sees differs by platform. When nothing is focused/displayed, all fields except `ProcessName` are `null`. This interface is undocumented by ManicTime.
   - `Title` = subject (optionally shortened to `maxSubject` chars), `DocumentName` = `From: …, To: …`, `DocumentGroup` = `<account>/<folder>` (`compose`, or `virtual|unified|tag/<name>` for special folders via `mailTabs.get`).
-- **Connections:** sockets are kept in a map per port; port 42870 is retried every 10 s, the fallback ports every 60 s. The last messages are replayed on `onopen`.
+- **Connections:** exactly one socket. `scan()` tries ports 42870–42879 one after another (3 s timeout each) and keeps the first that opens; no scanning while connected. When that socket closes, it rescans immediately; a scan that finds nothing retries after 10 s, doubling up to 60 s. The last messages are resent after connecting.
 - **Settings:** only `maxSubject` in `storage.local`, edited by `src/options.html/js`; changing it resets `lastKey` to force a resend.
 
 UI strings live in `src/_locales/{en,de}/messages.json` (must stay next to `manifest.json`) and are applied via `data-i18n` attributes in `options.html`.
