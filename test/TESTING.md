@@ -1,6 +1,6 @@
 # Testing ManicTime Tracker for Thunderbird
 
-The add-on has no UI of its own. It runs in the background and sends the mail in the focused Thunderbird window to ManicTime's local WebSocket `ws://127.0.0.1:42870/manictime-document/` (ports 42870–42879). You can test it with ManicTime (option A), or without it by using the mock server in this folder (option B).
+The add-on has no UI of its own. It runs in the background and sends the mail in the focused Thunderbird window to ManicTime's local WebSocket `ws://127.0.0.1:42870/manictime-document/` (ports 42870–42879). You can test it with ManicTime (option A), or without it by using the mock server [manictime-mock.py](manictime-mock.py) (option B).
 
 Requirements: Thunderbird 115 or newer with the add-on installed. To load it unsigned, use *Tools → Developer Tools → Debug Add-ons → Load Temporary Add-on* and select `src/manifest.json`.
 
@@ -16,7 +16,7 @@ Requirements: Thunderbird 115 or newer with the add-on installed. To load it uns
 
 ## Option B – without ManicTime (mock server)
 
-`manictime-mock.py` imitates ManicTime's local socket and prints every message the add-on sends. It uses only the Python 3 standard library.
+[manictime-mock.py](manictime-mock.py) imitates ManicTime's local socket and prints every message the add-on sends. It uses only the Python 3 standard library.
 
 1. Run the mock server:
    ```

@@ -8,8 +8,8 @@ A Thunderbird MailExtension (Manifest V2, Thunderbird ≥ 115) that reports the 
 
 ## Commands
 
-- Build the `.xpi`: `./build.sh` → `dist/manictime-tracker-<version>.xpi` (version read from `src/manifest.json`). It first regenerates `doc/README.html`, then zips the files listed in `build.sh` from inside `src/` and adds the root `LICENSE`. New files in `src/` must be added to that `zip` list, or they are not shipped.
-- Regenerate the AMO description only: `python3 doc/readme2html.py`
+- Build the `.xpi`: `./build.sh` → `dist/manictime-tracker-<version>.xpi` (version read from `src/manifest.json`). It first regenerates `doc/README.html` and `doc/TESTING.html`, then zips the files listed in `build.sh` from inside `src/` and adds the root `LICENSE`. New files in `src/` must be added to that `zip` list, or they are not shipped.
+- Regenerate the AMO HTML files only: `python3 doc/readme2html.py`
 - Lint (optional, `WEBEXT-LINTER-CACHE/` is gitignored): `npx web-ext lint --source-dir src`
 - Manual test: Thunderbird → Debug Add-ons → Load Temporary Add-on → select `src/manifest.json`.
 - Test steps (for users and AMO reviewers) are in `test/TESTING.md`; keep them in sync with behavior changes.
@@ -28,7 +28,7 @@ UI strings live in `src/_locales/{en,de}/messages.json` (must stay next to `mani
 
 ## Conventions
 
-- `doc/README.html` is the template for the add-on description on addons.thunderbird.net, generated from `README.md` by `python3 doc/readme2html.py` (also run by `build.sh`). Regenerate it after every change to `README.md`. AMO allows only `<a href title> <abbr title> <acronym title> <b> <blockquote> <code> <em> <i> <li> <ol> <strong> <ul>` — no headings, no `<p>`/`<br>` (newlines become breaks), so the converter drops the H1 (AMO shows the name), turns other headings into `<b>`, writes each list on one line and rewrites relative links to `https://github.com/jhit/ManicTime-Tracker-for-Thunderbird/blob/main/…`. It supports only the Markdown the README uses (headings, paragraphs, `-`/`1.` lists with 2-space nesting, `>` quotes, code, bold, italic, links); extend `doc/readme2html.py` before using other syntax, and check the output contains only allowed tags.
+- `doc/README.html` (add-on description) and `doc/TESTING.html` (test instructions for reviewers) are templates for addons.thunderbird.net, generated from `README.md` and `test/TESTING.md` by `python3 doc/readme2html.py` (also run by `build.sh`; file pairs in `FILES`). Regenerate them after every change to either Markdown file. AMO allows only `<a href title> <abbr title> <acronym title> <b> <blockquote> <code> <em> <i> <li> <ol> <strong> <ul>` — no headings, no `<p>`/`<br>` (newlines become breaks), so the converter drops the H1 (AMO shows the name), turns other headings into `<b>`, writes each list on one line and rewrites relative links to `https://github.com/jhit/ManicTime-Tracker-for-Thunderbird/blob/main/…`. It supports only the Markdown these files use (headings, paragraphs, nested `-`/`1.` lists, ``` code blocks, `>` quotes, code, bold, italic, links, `<https://…>`); extend `doc/readme2html.py` before using other syntax, and check the output contains only allowed tags.
 - Releases: bump `version` in `src/manifest.json` and add a `CHANGELOG.md` entry; behavior/format changes are documented in both `README.md` and `README.de.md` (keep them in sync).
 - What is sent and where is stated in three places that must stay in sync with `src/background.js`: the README Privacy section, `doc/PRIVACY.md`/`doc/PRIVACY.de.md` (text for the ATN privacy policy field), and the `optionsData` string on the options page.
 - The ManicTime name and icon are used with permission of the ManicTime developer.
