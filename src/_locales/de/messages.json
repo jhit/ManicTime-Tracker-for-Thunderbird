@@ -11,6 +11,9 @@
   "optionsIntro": {
     "message": "Legt fest, was für die Nachricht im aktiven Thunderbird-Fenster an ManicTime gesendet wird."
   },
+  "optionsData": {
+    "message": "Gesendet werden für die Mail im aktiven Fenster: Absender, Empfänger, Betreff, Kontoname und Ordner. Sie gehen nur an den ManicTime-Client auf diesem Rechner (127.0.0.1), nie über das Netzwerk, und werden vom Add-on nicht gespeichert."
+  },
   "maxSubjectLabel": {
     "message": "Maximale Länge des Betreffs"
   },

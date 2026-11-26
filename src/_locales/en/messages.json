@@ -11,6 +11,9 @@
   "optionsIntro": {
     "message": "Controls what is sent to ManicTime for the mail in the active Thunderbird window."
   },
+  "optionsData": {
+    "message": "Sent for the mail in the active window: sender, recipients, subject, account name and folder. They go only to the ManicTime client on this computer (127.0.0.1), never over the network, and are not stored by the add-on."
+  },
   "maxSubjectLabel": {
     "message": "Maximum subject length"
   },

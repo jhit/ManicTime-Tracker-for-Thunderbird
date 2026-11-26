@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "__MSG_extensionName__",
-  "version": "1.15",
+  "version": "1.16",
   "description": "__MSG_extensionDescription__",
   "browser_specific_settings": {
     "gecko": {
@@ -26,7 +26,7 @@
   },
   "default_locale": "en",
   "icons": {
-    "48": "manictime.png",
-    "96": "manictime.png"
+    "48": "manictime-48.png",
+    "96": "manictime-96.png"
   }
 }

@@ -1,0 +1,27 @@
+<a href="https://github.com/jhit/ManicTime-Tracker-for-Thunderbird/blob/main/README.de.md">Deutsch</a>
+
+Reports <strong>From / To / Subject</strong> of the focused Thunderbird window (reading or composing a mail) to the local <strong>ManicTime</strong> client, so it shows up on the Documents timeline. Optional: shorten the subject to a maximum number of characters (add-on settings). English and German UI.
+
+<b>Usage</b>
+<ol><li>Install and run the <strong>ManicTime</strong> client on the same computer. Thunderbird itself needs no setup.</li><li>Install the add-on. It has no toolbar button and no menu entry: it works in the background as long as Thunderbird is running.</li><li>Select or open a mail, or write a new one. Within a few seconds ManicTime shows it on the <strong>Documents</strong> timeline as <code>From: &lt;sender&gt;, To: &lt;receiver&gt;</code>, grouped by account and folder. The subject appears as the window title on the <strong>Applications</strong> timeline.</li><li>Optional settings: <em>Tools → Add-ons and Themes → ManicTime Tracker for Thunderbird → ⋯ → Options</em>. There you can set the maximum subject length (0 = no limit). Changes are saved immediately.</li></ol>
+
+If nothing shows up in ManicTime, make sure the ManicTime client is running; the add-on reconnects automatically.
+
+<b>How it works</b>
+The add-on reports each mail to ManicTime as an email document, in the same format as the ManicTime Outlook plugin: <code>DocumentType</code> = <code>ManicTime/Email</code>. It sends the message <code>{ProcessName, Title, DocumentType, DocumentName, DocumentGroup}</code> to ManicTime's local document-tracker WebSocket <code>ws://127.0.0.1:42870/manictime-document/</code> (ports 42870–42879). Up to 1.14 it used the browser-extension format instead (<code>{ProcessName, Title, Url, IsPrivate}</code> with a fake web URL).
+
+<ul><li><code>Title</code> is the subject. It is the window title on the Applications timeline.</li><li><code>DocumentName</code> is <code>From: &lt;sender&gt;, To: &lt;receiver&gt;</code>. It is the entry on the Documents timeline.</li><li><code>DocumentGroup</code> is <code>&lt;account&gt;/&lt;folder&gt;</code>, e.g. <code>myAccount/INBOX</code> (account = name of the Thunderbird mail account). It groups the entries on the Documents timeline.<ul><li>Composing: <code>&lt;account&gt;/compose</code>.</li><li>Mail viewed in a search, unified or tag folder: <code>&lt;account&gt;/virtual/&lt;name&gt;</code>, <code>&lt;account&gt;/unified/&lt;name&gt;</code> or <code>&lt;account&gt;/tag/&lt;name&gt;</code>.</li></ul></li></ul>
+
+If no mail is being read or composed, all fields are sent as <code>null</code>.
+
+<b>Privacy</b>
+Mail data is sent only to <code>127.0.0.1</code> (ManicTime on your own machine). The add-on has no network access beyond that and stores only the subject-length setting. Nothing is sent to the developer or any third party.
+
+<b>Install</b>
+Install the signed <code>.xpi</code> via Thunderbird → Add-ons → ⚙ → Install Add-on From File. Unsigned builds need <code>xpinstall.signatures.required=false</code> or <em>Debug Add-ons → Load Temporary Add-on</em> (<code>src/manifest.json</code>).
+
+<b>Notes</b>
+<ul><li>Tested on Linux (GNOME/Wayland with the ManicTime GNOME extension) on Windows and on macOS (15.8.3 on a Mac mini 2018). If your Thunderbird process has another name (Flatpak/Snap), edit <code>PROCESS_NAMES</code> in <code>src/background.js</code>.</li><li>Developed independently of ManicTime / Finkit. The ManicTime name and icon are used with permission of the ManicTime developer. The socket interface used is undocumented and may change.</li></ul>
+
+<b>License</b>
+Copyright (C) 2026 Jürgen Hörmann. Licensed under the <strong>GNU General Public License v3.0 or later</strong> – see <code>LICENSE</code>.

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.16
+- The options page now states which data is sent (sender, recipients, subject, account and folder) and that it goes only to the ManicTime client on this computer.
+- Icons in the sizes declared in the manifest (48 and 96 px).
+- The `.xpi` now contains the `LICENSE`.
+- README: usage instructions (where the add-on works, where to find its options); the ManicTime name and icon are used with permission of the ManicTime developer.
+- Added a privacy policy (`doc/PRIVACY.md`, `doc/PRIVACY.de.md`) and the add-on description for addons.thunderbird.net (`doc/README.html`, generated from `README.md`).
+- Added test instructions (`test/TESTING.md`) and a mock ManicTime server (`test/manictime-mock.py`) to test the add-on without ManicTime.
+- Source files moved to `src/`.
+
 ## 1.15
 - Tracking now uses the ManicTime document type `ManicTime/Email` (as the ManicTime Outlook plugin does) instead of a fake URL: the Documents timeline shows `From: <sender>, To: <receiver>`, grouped as `<account>/<folder>` (`<account>/compose` when composing; search, unified and tag folders as `virtual|unified|tag/<name>`). The subject is the window title on the Applications timeline.
 - Tested on macOS 15.8.3 (Mac mini 2018) in addition to Linux and Windows.
