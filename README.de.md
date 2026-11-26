@@ -14,7 +14,7 @@ Mail-Daten werden nur an `127.0.0.1` gesendet (ManicTime auf dem eigenen Rechner
 Die signierte `.xpi` in Thunderbird installieren: Add-ons → ⚙ → Add-on aus Datei installieren. Unsignierte Builds brauchen `xpinstall.signatures.required=false` oder *Add-ons debuggen → Temporäres Add-on laden* (`extension/manifest.json`).
 
 ## Hinweise
-- Getestet unter Linux (GNOME/Wayland mit der ManicTime-GNOME-Erweiterung) und unter Windows. Nicht getestet unter macOS. Hat der Thunderbird-Prozess einen anderen Namen (Flatpak/Snap), `PROCESS_NAMES` in `extension/background.js` anpassen.
+- Getestet unter Linux (GNOME/Wayland mit der ManicTime-GNOME-Erweiterung) unter Windows und unter macOS (15.8.3 auf einem Mac mini 2018). Hat der Thunderbird-Prozess einen anderen Namen (Flatpak/Snap), `PROCESS_NAMES` in `extension/background.js` anpassen.
 - Nicht mit ManicTime / Finkit verbunden oder von ihnen unterstützt. Die verwendete Socket-Schnittstelle ist nicht dokumentiert und kann sich ändern.
 
 ## Lizenz
