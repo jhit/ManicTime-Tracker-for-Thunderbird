@@ -1,8 +1,8 @@
 // ManicTime Tracker for Thunderbird - Copyright (C) 2026 Jürgen Hörmann
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Polls the focused Thunderbird window and sends From/To/Subject as a
-// "ManicTime/Email" document to the local ManicTime client via its document-tracker WebSocket (the same one the
-// ManicTime Chrome/Firefox extension uses).
+// "ManicTime/Email" document (the format the ManicTime Outlook plugin uses)
+// to the local ManicTime client via its document-tracker WebSocket.
 const FIRST_PORT = 42870;
 const PORT_COUNT = 10;
 const PROCESS_NAMES = ["thunderbird", "thunderbird-bin"]; // as seen by ManicTime
